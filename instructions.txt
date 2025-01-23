@@ -1,0 +1,94 @@
+Application Instructions
+
+Overview
+This application is a text-to-speech tool that generates audio files based on input text. It supports both WAV and MP3 file formats and allows customization through various command-line arguments.
+
+
+
+Usage
+ttsforge --gender <Male|Female> --outfile  (--string  | --infile ) [--parse  ...]
+
+
+
+Required Arguments:
+
+--gender
+Specifies the voice gender.
+Options: Male or Female
+
+--outfile
+Specifies the output file name, including the desired extension (.wav or .mp3).
+Example: output.wav or output.mp3
+
+
+
+Input Source (One of the following):
+--string 
+Directly pass the text to convert to speech.
+--infile 
+Specifies a file containing the text to convert.
+
+
+
+Optional Arguments:
+
+--parse 
+Specifies one or more parse files to modify the input text before processing.
+Parse files contain rules for substitutions in the format:
+word1-->replacement1
+word2-->replacement2
+Each line defines a substitution rule where word1 is replaced by replacement1.
+To avoid changes to subwords and partial matches, spaces and punctuation are supported.
+For example:
+" TTS --> text to speech "
+" world --> earth "
+Note: The spaces are retained for matches, and the --> is only used to split the parts.
+
+
+
+Default File Type
+If no valid extension is provided in --outfile, the application defaults to .wav format.
+
+Examples
+Example 1: Basic Usage
+Convert a simple string to a WAV file:
+ttsforge --gender Female --outfile output.wav --string "Hello world!"
+
+Example 2: Using an Input File
+Convert text from a file to an MP3 file:
+ttsforge --gender Male --outfile output.mp3 --infile input.txt
+
+Example 3: Using Parse Rules
+Apply substitutions before generating speech:
+
+Create a parse file, rules.txt:
+hello-->hi
+world-->earth
+" space hello --> space hi "
+" earth --> earth planet "
+
+Run the application:
+--gender Female --outfile output.wav --string "Hello world!" --parse rules.txt
+Output will replace "hello" with "hi" and "world" with "earth". Words with spaces before or after, like " space hello " will only match exact matches.
+
+
+Notes:
+
+Ensure that the lame MP3 encoder is installed and accessible if using the MP3 format. It is provided with in this release. Preferably, keep it in the same directory as the ttforge file.
+
+Temporary files are created in the system's temporary directory when converting to MP3.
+
+Input text will preserve its formatting, but quotes (") will be replaced with single quotes (') in the output.
+
+If a parse file includes invalid rules (e.g., missing -->), they will be ignored.
+
+Troubleshooting
+
+Error: Input file not found
+Ensure the file path specified in --infile exists.
+
+Error: LAME encoder not found
+Install the LAME MP3 encoder or ensure it is in your system's PATH.
+
+Unexpected Output
+Check the contents of your parse file for unintended rules.
